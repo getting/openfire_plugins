@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <!-- Main plugin class  插件的全路径-->
+    <class>com.mmbang.im.plugins.test.TestPlugin</class>
+ 
+    <!-- Plugin meta-data -->
+    <name>TestPlugin</name>
+    <description>TestPlugin</description>
+    <author>huxingbang</author>
+ 
+    <version>1.0</version>
+    <date>20/11/2013</date>
+    <minServerVersion>1.0.0</minServerVersion>
+    <licenseType>gpl</licenseType>
+ 
+    <adminconsole>    
+    </adminconsole>
+</plugin>

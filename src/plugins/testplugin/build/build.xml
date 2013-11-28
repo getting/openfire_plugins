@@ -1,0 +1,24 @@
+<project name="plugin" basedir=".">
+	<property name="plugin-name" value="testplugin"></property>
+	<property name="target-path" value="../target"></property>
+	<target name="compile">
+		<mkdir dir="${target-path}"/>
+		<mkdir dir="${target-path}/class"/>
+		<mkdir dir="${target-path}/java-jar"/>
+		<mkdir dir="${target-path}/dst"/>
+		<mkdir dir="${target-path}/dst/lib/"/>
+		<copy file="../plugin.xml" todir="${target-path}/dst"></copy>
+		<javac includeantruntime="on" 
+			optimize="off" encoding="utf-8" 
+			debug="on" 
+			srcdir="../src/java" destdir="${target-path}/class">
+			<classpath path="/Volumes/sdisk/workspace/openfire_src/target/openfire/lib/openfire.jar"></classpath>
+		</javac>
+		<jar destfile="${target-path}/java-jar/${plugin-name}-java.jar" basedir="${target-path}/class"></jar>
+		<copy file="${target-path}/java-jar/${plugin-name}-java.jar" todir="${target-path}/dst/lib"></copy>
+		<jar destfile="${target-path}/${plugin-name}.jar" basedir="${target-path}/dst"></jar>
+	</target>
+	<target name="clean">
+		<delete dir="${target-path}"></delete>
+	</target>
+</project>

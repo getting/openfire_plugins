@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <!-- Main plugin class  插件的全路径-->
+    <class>com.mmbang.im.openfireplugin.LogMessagePlugin</class>
+ 
+    <!-- Plugin meta-data -->
+    <name>LogMessagePlugin</name>
+    <description>LogMessagePlugin to mongo</description>
+    <author>huxingbang</author>
+ 
+    <version>1.0</version>
+    <date>20/11/2013</date>
+    <minServerVersion>1.0.0</minServerVersion>
+    <licenseType>gpl</licenseType>
+ 
+    <adminconsole>    
+    </adminconsole>
+    <mongo>
+    	<host>192.168.1.51</host>
+    	<port>27017</port>
+    	<db>openfire</db>
+    	<collection>messages</collection>
+    </mongo>
+</plugin>
