@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <!-- Main plugin class  插件的全路径-->
+    <class>com.mmbang.im.openfireplugin.fitermessage.FilterMessagePlugin</class>
+ 
+    <!-- Plugin meta-data -->
+    <name>FilterMessagePlugin</name>
+    <description>FilterMessagePlugin</description>
+    <author>huxingbang</author>
+ 
+    <version>1.0</version>
+    <date>20/11/2013</date>
+    <minServerVersion>1.0.0</minServerVersion>
+    <licenseType>gpl</licenseType>
+ 
+    <adminconsole>    
+    </adminconsole>
+    <mongo>
+    	<host>192.168.100.23</host>
+    	<port>25017</port>
+    	<db>area</db>
+    	<collection>user_fans</collection>
+    </mongo>
+    <memcached>
+    	<host>127.0.0.1:11212</host>
+    </memcached>
+</plugin>
