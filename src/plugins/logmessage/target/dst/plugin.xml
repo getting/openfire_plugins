@@ -21,4 +21,8 @@
     	<db>openfire</db>
     	<collection>messages</collection>
     </mongo>
+    <excludeUserIds>
+    	<userId>52940b311d41c8061150a8af</userId>
+    	<userId>529409f41d41c8061150a8ab</userId>
+    </excludeUserIds>
 </plugin>

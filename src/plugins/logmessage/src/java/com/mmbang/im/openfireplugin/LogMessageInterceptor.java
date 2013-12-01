@@ -1,6 +1,6 @@
 package com.mmbang.im.openfireplugin;
-import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.jivesoftware.openfire.interceptor.PacketInterceptor;
 import org.jivesoftware.openfire.interceptor.PacketRejectedException;
@@ -15,9 +15,11 @@ import com.mongodb.DBObject;
 
 public class LogMessageInterceptor implements PacketInterceptor {
 	private DBCollection messages=null;
+	private HashMap<String, String> excludeUsers=null;
 	
-	public LogMessageInterceptor(DBCollection messages){
+	public LogMessageInterceptor(DBCollection messages, HashMap<String, String> excludeUsers){
 		this.messages=messages;
+		this.excludeUsers=excludeUsers;
 	}
 	public void interceptPacket(Packet packet, Session session,
 			boolean incoming, boolean processed) throws PacketRejectedException {
@@ -25,9 +27,11 @@ public class LogMessageInterceptor implements PacketInterceptor {
 		if (packet instanceof Message && incoming && processed){
 			Message msg=(Message)packet;
 			String from=msg.getFrom().getNode();
-			String to=msg.getTo().getNode();
-			String content=msg.getBody();
-			this.saveMessage(from, to, content);
+			if (!this.excludeUsers.containsKey(from)){
+				String to=msg.getTo().getNode();
+				String content=msg.getBody();
+				this.saveMessage(from, to, content);
+			}
 		}
 	}
 	

@@ -16,12 +16,17 @@
     <adminconsole>    
     </adminconsole>
     <mongo>
-    	<host>192.168.100.23</host>
-    	<port>25017</port>
+    	<host>192.168.1.51</host>
+    	<port>27017</port>
     	<db>area</db>
     	<collection>user_fans</collection>
+    	<userdb>area</userdb>
+    	<userCollection>user</userCollection>
     </mongo>
     <memcached>
-    	<host>127.0.0.1:11212</host>
+    	<host>127.0.0.1:11211</host>
     </memcached>
+    <excludeUserIds>
+    	<userId>52940c23e138230460d929f8</userId>
+    </excludeUserIds>
 </plugin>

@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,11 +25,14 @@ public class FilterMessagePlugin implements Plugin {
 	private int port=27017;
 	private String dbName="area";
 	private String colName="user_fans";	
+	private String userdb="area";
+	private String userCollection="user";
 	private PacketInterceptor ic=null;
 	private PluginManager manager=null;
 	private Mongo mongo=null;
 	private MemCachedClient mc=null;
 	private String[] memcacheList=null;
+	private HashMap<String, String> excludeUsers=new HashMap<String, String>();
 
 	public void destroyPlugin() {
 		// TODO Auto-generated method stub
@@ -50,7 +54,7 @@ public class FilterMessagePlugin implements Plugin {
 		this.loadFans();
 		System.out.println("1");
 
-		ic =new FilterMessagePacketInterceptor(mc);
+		ic =new FilterMessagePacketInterceptor(mc, this.excludeUsers);
 		InterceptorManager.getInstance().addInterceptor(ic);
 	}
 	
@@ -77,7 +81,7 @@ public class FilterMessagePlugin implements Plugin {
 	
 	private void loadUsersVillage()
 	{
-		DBCursor users=this.mongo.getDB("area").getCollection("user").find();
+		DBCursor users=this.mongo.getDB(this.userdb).getCollection(this.userCollection).find();
 		System.out.println(this.mongo);
 		while(users.hasNext()){
 			System.out.println("v1");
@@ -161,6 +165,10 @@ public class FilterMessagePlugin implements Plugin {
 				this.dbName=nodeText;
 			} else if("collection".equals(nodeName)){
 				this.colName=nodeText;
+			} else if("userdb".equals(nodeName)){
+				this.userdb=nodeText;
+			} else if("userCollection".equals(nodeName)){
+				this.userCollection=nodeText;
 			}
 		}
 		
@@ -179,5 +187,18 @@ public class FilterMessagePlugin implements Plugin {
 		Object[] ObjectList=memcachedHosts.toArray();
 		this.memcacheList=Arrays.copyOf(ObjectList, ObjectList.length, String[].class);
 		System.out.println(this.memcacheList[0]);
+		
+		//exclued filter uerser
+		NodeList excludeEl=doc.getElementsByTagName("excludeUserIds");
+		org.w3c.dom.Node excludeNode=excludeEl.item(0);
+		NodeList excludeConfNodes=excludeNode.getChildNodes();
+		for(int j=0; j<excludeConfNodes.getLength(); j++){
+			String nodeName=excludeConfNodes.item(j).getNodeName();
+			String nodeText=excludeConfNodes.item(j).getTextContent();
+			if("userId".equals(nodeName)){
+				this.excludeUsers.put(nodeText.trim(), "yes");
+				System.out.println(nodeText);
+			}
+		}		
 	}	
 }

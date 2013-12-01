@@ -1,5 +1,7 @@
 package com.mmbang.im.openfireplugin.fitermessage;
 
+import java.util.HashMap;
+
 import org.jivesoftware.openfire.interceptor.PacketInterceptor;
 import org.jivesoftware.openfire.interceptor.PacketRejectedException;
 import org.jivesoftware.openfire.session.Session;
@@ -10,8 +12,10 @@ import com.danga.MemCached.MemCachedClient;
 
 public class FilterMessagePacketInterceptor implements PacketInterceptor {
 	private MemCachedClient mc=null;
-	public FilterMessagePacketInterceptor(MemCachedClient mc){
+	private HashMap<String, String> excludeUsers=new HashMap<String, String>();
+	public FilterMessagePacketInterceptor(MemCachedClient mc, HashMap<String, String> excludeUsers){
 		this.mc=mc;
+		this.excludeUsers=excludeUsers;
 	}
 	public void interceptPacket(Packet packet, Session session,
 			boolean incoming, boolean processed) throws PacketRejectedException {
@@ -20,13 +24,15 @@ public class FilterMessagePacketInterceptor implements PacketInterceptor {
 		String to=message.getTo().getNode();
 		String from=message.getFrom().getNode();
 		System.out.println(this.inBlackList(to, from)==true);
-		if(this.inBlackList(to, from)){
-			System.out.println("inblacklist\tto:"+to+"\tfrom"+from);
-			throw new PacketRejectedException();
-		}			
-		if(!this.isSameVillage(to, from) && !this.inFriend(to, from)){
-			System.out.println("isSameVillage\tto:"+to+"\tfrom"+from);
-			throw new PacketRejectedException();
+		if(!this.excludeUsers.containsKey(from)){
+			if(this.inBlackList(to, from)){
+				System.out.println("inblacklist\tto:"+to+"\tfrom"+from);
+				throw new PacketRejectedException();
+			}			
+			if(!this.isSameVillage(to, from) && !this.inFriend(to, from)){
+				System.out.println("isSameVillage\tto:"+to+"\tfrom"+from);
+				throw new PacketRejectedException();
+			}			
 		}
 	}
 	

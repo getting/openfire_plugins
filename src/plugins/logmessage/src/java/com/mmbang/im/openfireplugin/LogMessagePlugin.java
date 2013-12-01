@@ -1,9 +1,7 @@
 package com.mmbang.im.openfireplugin;
-/**
- * ant -f build.xml -Dplugin=logmessage plugin
- */
 import java.io.File;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,6 +25,7 @@ public class LogMessagePlugin implements Plugin {
 	private int port=27017;
 	private String dbName="openfire";
 	private String colName="messages";	
+	private HashMap<String, String> excludeUsers=new HashMap<String, String>();
 	
 	public void destroyPlugin() {
 		// TODO Auto-generated method stub
@@ -41,8 +40,10 @@ public class LogMessagePlugin implements Plugin {
 		// TODO Auto-generated method stub
 		System.out.println("start LogMessage plugin...");
 		this.manager=manager;
+		System.out.println("begin load config");
 		this.loadConfig();
-		ic=new LogMessageInterceptor(this.getCollection());
+		System.out.println("load ok");
+		ic=new LogMessageInterceptor(this.getCollection(), this.excludeUsers);
 		InterceptorManager.getInstance().addInterceptor(ic);
 	}
 	
@@ -62,10 +63,14 @@ public class LogMessagePlugin implements Plugin {
 		try {
 			db=dbf.newDocumentBuilder();
 			doc = db.parse(new File(xmlPath));
-			System.out.println(doc);
+			System.out.println("dfdf");
+			System.out.println(doc+"2233");
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("111");
 		}
+		System.out.println("222");
+		
 		NodeList el=doc.getElementsByTagName("mongo");
 		org.w3c.dom.Node mongoNode = el.item(0);
 		NodeList mongoConfNodes=mongoNode.getChildNodes();
@@ -83,6 +88,21 @@ public class LogMessagePlugin implements Plugin {
 				this.colName=nodeText;
 			}
 		}
+		
+		System.out.println("dfdf");
+		
+		NodeList excludeEl=doc.getElementsByTagName("excludeUserIds");
+		org.w3c.dom.Node excludeNode=excludeEl.item(0);
+		NodeList excludeConfNodes=excludeNode.getChildNodes();
+		for(int j=0; j<excludeConfNodes.getLength(); j++){
+			String nodeName=excludeConfNodes.item(j).getNodeName();
+			String nodeText=excludeConfNodes.item(j).getTextContent();
+			if("userId".equals(nodeName)){
+				this.excludeUsers.put(nodeText.trim(), "yes");
+				System.out.println(nodeText);
+			}
+		}
+		System.out.println("excludeUsers:"+this.excludeUsers);
 	}
 	
 	private DBCollection getCollection()
